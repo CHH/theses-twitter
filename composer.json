@@ -8,5 +8,10 @@
     "license": "MIT",
     "authors": [
         {"name": "Christoph Hochstrasser", "email": "me@christophh.net"}
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "theses\\plugin\\twitter\\": "./"
+        }
+    }
 }

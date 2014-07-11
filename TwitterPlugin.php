@@ -5,6 +5,7 @@ namespace theses\plugin\twitter;
 use theses\Events;
 use theses\Theses;
 use Symfony\Component\HttpFoundation\Request;
+use theses\plugin\Plugin;
 
 /**
  * Twitter Plugin
