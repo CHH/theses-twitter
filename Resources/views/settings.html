@@ -1,0 +1,70 @@
+{% extends "settings_pane.html" %}
+{% block pane_title %}
+    <h1>{{ pluginInfo.name }}</h1>
+    {% if twitterUser.error is defined %}
+    {% endif %}
+{% endblock %}
+
+{% block pane_main %}
+    <div class="plugin-info">
+        <table>
+            <tr>
+                <td>Version</td>
+                <td>{{ pluginInfo.version|default('No version specified') }}</td>
+            </tr>
+            {% if pluginInfo.homepage is defined %}
+            <tr>
+                <td>Homepage</td>
+                <td><a href="{{ pluginInfo.homepage }}">{{ pluginInfo.homepage }}</a></td>
+            </tr>
+            {% endif %}
+            {% if pluginInfo.author is defined %}
+            <tr>
+                <td>Author</td>
+                <td>
+                    <a href="{{ pluginInfo.author.homepage|default('') }}">{{ pluginInfo.author.name }}</a>
+                    (<a href="mailto:{{ pluginInfo.author.email }}">{{ pluginInfo.author.email }}</a>)
+                </td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    {% if twitterUser.error is not defined  %}
+    <div class="twitter-user">
+        <p>
+            Connected as <a href="{{ twitterUser['url']|default('') }}">{{ twitterUser.screen_name }}</a>
+            <form method="post" action="{{ path('twitter_disconnect') }}">
+                <button class="btn btn-primary btn-delete">Disconnect</button>
+            </form>
+        </p>
+    </div>
+
+    <form novalidate id="twitter-settings" method="post" action="{{ path('twitter_settings_save') }}">
+        {{ form_widget(settings) }}
+    </form>
+    {% else %}
+    <div class="block-notification notice">
+        <i class="icon fa fa-info-circle"></i>
+        <div class="message">
+            <p>
+                No Twitter account connected yet. Connect your Twitter account to enable this plugin.
+            </p>
+            <p>
+                <button form="twitter_connect_form" type="submit" name="connect" class="btn btn-primary">
+                    Connect your Twitter account
+                </button>
+            </p>
+        </div>
+
+        <form id="twitter_connect_form" method="post" action="{{ path('twitter_connect') }}">
+        </form>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block pane_footer %}
+{% if twitterUser.error is not defined %}
+<button form="twitter-settings" type="submit" class="btn btn-primary">Save</button>
+{% endif %}
+{% endblock %}
