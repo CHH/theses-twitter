@@ -1,0 +1,12 @@
+{
+    "name": "chh/theses-twitter",
+    "description": "Twitter plugin for chh/theses-core",
+    "require": {
+        "php": ">=5.4",
+        "chh/theses-core": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {"name": "Christoph Hochstrasser", "email": "me@christophh.net"}
+    ]
+}
