@@ -36,12 +36,12 @@ class TwitterPlugin implements Plugin
             'enabled' => true
         ]);
 
-        $core->addSettingsMenuEntry(static::getPluginInfo()['name'], ['route' => 'twitter_settings']);
+        $core->addPluginSettingsMenuEntry(static::getPluginInfo()['name'], ['route' => 'twitter_settings']);
 
         $core['twitter.app'] = $core->share(function() use ($core, $settings) {
             $defaults = [
-                'consumer_key' => $_SERVER['TWITTER_CONSUMER_KEY'],
-                'consumer_secret' => $_SERVER['TWITTER_CONSUMER_SECRET'],
+                'consumer_key' => @$_SERVER['TWITTER_CONSUMER_KEY'] ?: $settings->get('consumerKey'),
+                'consumer_secret' => @$_SERVER['TWITTER_CONSUMER_SECRET'] ?: $settings->get('consumerSecret'),
             ];
 
             $config = array_merge($defaults, isset($core['twitter.config']) ? $core['twitter.config'] : []);
@@ -79,8 +79,18 @@ class TwitterPlugin implements Plugin
 
         $core['admin.engine'] = $core->share(
             $core->extend('admin.engine', function($admin) use ($core, $settings) {
-                $admin['twitter.settings.form'] = $admin->protect(function($data) use ($admin) {
+                $admin['twitter.settings.form'] = $admin->protect(function($data) use ($admin, $settings) {
                     return $admin->form($data)
+                        ->add('consumerKey', 'text', [
+                            'label' => 'Twitter Consumer Key',
+                            'disabled' => isset($_SERVER['TWITTER_CONSUMER_KEY']) ? true : false,
+                            'data' => isset($_SERVER['TWITTER_CONSUMER_KEY']) ? $_SERVER['TWITTER_CONSUMER_KEY'] : $settings->get('consumerKey'),
+                        ])
+                        ->add('consumerSecret', 'text', [
+                            'label' => 'Twitter Consumer Secret',
+                            'disabled' => isset($_SERVER['TWITTER_CONSUMER_SECRET']) ? true : false,
+                            'data' => isset($_SERVER['TWITTER_CONSUMER_SECRET']) ? $_SERVER['TWITTER_CONSUMER_SECRET'] : $settings->get('consumerSecret'),
+                        ])
                         ->add('enabled', 'checkbox', ['label' => 'Update Twitter status when a post is published'])
                         ->add('tweet', 'textarea', ['attr' => ['rows' => 3]]);
                 });

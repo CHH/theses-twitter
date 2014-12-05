@@ -39,10 +39,6 @@
             </form>
         </p>
     </div>
-
-    <form novalidate id="twitter-settings" method="post" action="{{ path('twitter_settings_save') }}">
-        {{ form_widget(settings) }}
-    </form>
     {% else %}
     <div class="block-notification notice">
         <i class="icon fa fa-info-circle"></i>
@@ -61,10 +57,12 @@
         </form>
     </div>
     {% endif %}
+
+    <form novalidate id="twitter-settings" method="post" action="{{ path('twitter_settings_save') }}">
+        {{ form_widget(settings) }}
+    </form>
 {% endblock %}
 
 {% block pane_footer %}
-{% if twitterUser.error is not defined %}
 <button form="twitter-settings" type="submit" class="btn btn-primary">Save</button>
-{% endif %}
 {% endblock %}
